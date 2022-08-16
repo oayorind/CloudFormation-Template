@@ -1,0 +1,44 @@
+# This is a hands-on task to create the cloudformation stack with
+# 2 EC2 instances in total & one s3 bucket
+# Webserver with 8gb EBS
+# Appserver with 10gb EBS
+# One S3 bucket to store invoice pdf files
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+
+Resources :
+  Webserver:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-090fa75af13c156b4"
+      KeyName: "groupkey"
+      InstanceType:
+        Ref: InstanceTypeParameter
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 8
+            VolumeType : gp2
+
+
+  Appserver:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-090fa75af13c156b4"
+      KeyName: "groupkey"
+      InstanceType: "t2.micro"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType : gp2
+
+  invoiceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "haywhybuck-1234-bsv"
+      AccessControl: "PublicRead"
